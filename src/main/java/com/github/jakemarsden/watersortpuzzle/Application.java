@@ -1,10 +1,10 @@
-package watermixpuzzle;
+package com.github.jakemarsden.watersortpuzzle;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class WaterMixPuzzle {
+public class Application {
 
 	// Light green = 0
 	// Grey        = 1
