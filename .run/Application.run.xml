@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Application" type="Application" factoryName="Application">
-    <option name="MAIN_CLASS_NAME" value="watermixpuzzle.watermixpuzzle" />
+    <option name="MAIN_CLASS_NAME" value="watermixpuzzle.WaterMixPuzzle" />
     <module name="watermixpuzzle" />
     <method v="2">
       <option name="Make" enabled="true" />
