@@ -1,0 +1,40 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - develop
+  schedule:
+    - cron: '* * * */3 *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build with Java ${{ matrix.java }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Configure JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+
+      - name: Gradle build
+        run: ./gradlew build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        java:
+          - 11
+        os:
+          - ubuntu-latest
+          - ubuntu-16.04
+          - macos-latest
+          - windows-latest
+        include:
+          - java: 15
+            os: ubuntu-latest
