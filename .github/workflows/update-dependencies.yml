@@ -1,0 +1,25 @@
+name: Update dependencies
+
+on:
+  schedule:
+    - cron: '* * * */3 *'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Update Gradle wrapper
+        uses: gradle-update/update-gradle-wrapper-action@v1
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          reviewers: |
+            jakemarsden
+          labels: |
+            automated
+            dependencies
