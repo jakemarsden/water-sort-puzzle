@@ -25,12 +25,12 @@ final class PuzzleSolver {
      *         </ul>
      */
     public Optional<? extends Collection<Move>> solve() {
-        Queue<Move> solutionSteps = new ArrayDeque<>();
+        Deque<Move> solutionSteps = new ArrayDeque<>();
         boolean solved = solve(puzzle, solutionSteps);
         return solved ? Optional.of(solutionSteps) : Optional.empty();
     }
 
-    private boolean solve(Puzzle puzzle, Queue<Move> solutionSteps) {
+    private boolean solve(Puzzle puzzle, Deque<Move> solutionSteps) {
         if (puzzle.isSolved()) {
             return true;
         }
@@ -49,7 +49,7 @@ final class PuzzleSolver {
 
                 var nextPuzzleState = move.execute();
                 if (solve(nextPuzzleState, solutionSteps)) {
-                    solutionSteps.add(move);
+                    solutionSteps.addFirst(move);
                     return true;
                 }
                 // if this valid move did not ultimately solve the puzzle, continue looking for

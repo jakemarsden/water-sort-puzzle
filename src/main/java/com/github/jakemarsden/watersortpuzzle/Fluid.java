@@ -31,12 +31,20 @@ final class Fluid {
         return amount;
     }
 
+    public Fluid withAdditionalAmount(int amount) {
+        if (amount + getAmount() < 0) {
+            throw new IllegalArgumentException("amount: " + amount);
+        }
+        return new Fluid(getType(), getAmount() + amount);
+    }
+
     public Stream<Type> streamLayers() {
         return Stream.generate(this::getType)//
                 .limit(getAmount());
     }
 
     public enum Type {
+
         LightGreen('0'),
         Grey('1'),
         LightBlue('2'),

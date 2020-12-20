@@ -47,7 +47,7 @@ final class Tube {
             if (nextType != accumulatingType) {
                 // this fluid is finished; want to move onto the next one, so append it to contents
                 if (accumulatingType != null) {
-                    contents.addFirst(Fluid.of(accumulatingType, accumulatingAmount));
+                    contents.addLast(Fluid.of(accumulatingType, accumulatingAmount));
                 }
                 accumulatingType = nextType;
                 accumulatingAmount = 0;
@@ -55,7 +55,7 @@ final class Tube {
             accumulatingAmount++;
         }
         if (accumulatingType != null) {
-            contents.addFirst(Fluid.of(accumulatingType, accumulatingAmount));
+            contents.addLast(Fluid.of(accumulatingType, accumulatingAmount));
         }
         return new Tube(str.length(), contents);
     }
@@ -78,6 +78,10 @@ final class Tube {
                 .sum();
     }
 
+    public boolean isFull() {
+        return getSpareCapacity() == 0;
+    }
+
     public int getSpareCapacity() {
         return getCapacity() - getUsedCapacity();
     }
@@ -91,8 +95,21 @@ final class Tube {
         return Optional.ofNullable(fluidOrNull);
     }
 
+    public Optional<Fluid.Type> getFluidTypeAtDepth(int depth) {
+        if (isEmpty()) {
+            return Optional.empty();
+        }
+        var spareCap = getSpareCapacity();
+        if (spareCap > depth) {
+            return Optional.empty();
+        }
+        return streamLayers()//
+                .skip(depth - spareCap)//
+                .findFirst();
+    }
+
     public boolean containsSingleFluidType() {
-        return isEmpty() || contents.size() == 1;
+        return contents.size() == 1;
     }
 
     public Tube withAdditionalFluid(Fluid fluid) {
@@ -104,8 +121,19 @@ final class Tube {
             throw new IllegalStateException(//
                     format("Insufficient capacity for %s: \"%s\"", fluid, this));
         }
-        Deque<Fluid> newContents = new ArrayDeque<>(contents.size() + 1);
-        newContents.addFirst(fluid);
+
+        var currFirst = contents.peekFirst();
+        Deque<Fluid> newContents;
+        if (currFirst != null && currFirst.getType() == fluid.getType()) {
+            var merged = currFirst.withAdditionalAmount(fluid.getAmount());
+            newContents = new ArrayDeque<>(contents);
+            newContents.removeFirst();
+            newContents.addFirst(merged);
+        } else {
+            newContents = new ArrayDeque<>(contents.size() + 1);
+            newContents.addAll(contents);
+            newContents.addFirst(fluid);
+        }
         return new Tube(getCapacity(), newContents);
     }
 

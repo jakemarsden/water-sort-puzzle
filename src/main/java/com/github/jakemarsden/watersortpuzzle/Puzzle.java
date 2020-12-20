@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
-import static java.util.Collections.*;
 import static java.util.Objects.*;
 
 final class Puzzle {
@@ -21,8 +20,10 @@ final class Puzzle {
     }
 
     public boolean isSolved() {
-        return Stream.of(tubes)//
-                .allMatch(Tube::containsSingleFluidType);
+        // FIXME: don't insist on always being full: if there is no more than one partially-full
+        //  tube of each type, it's done
+        return Stream.of(tubes).allMatch(//
+                tube -> tube.isEmpty() || (tube.isFull()) && tube.containsSingleFluidType());
     }
 
     public Tube getNthTube(int n) {
@@ -38,7 +39,7 @@ final class Puzzle {
     }
 
     public Puzzle withUpdatedTube(int tubeIdx, UnaryOperator<Tube> tubeOperator) {
-        requireNonNull(tubeOperator, "tubeOperator");
+        requireNonNull(tubeOperator);
         var currTube = getNthTube(tubeIdx);
         var nextTube = tubeOperator.apply(currTube);
         if (nextTube == currTube) {

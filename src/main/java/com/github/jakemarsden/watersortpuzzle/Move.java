@@ -25,6 +25,18 @@ final class Move {
         this.dstTubeIdx = dstTubeIdx;
     }
 
+    public Puzzle getBefore() {
+        return before;
+    }
+
+    public int getSrcTubeIdx() {
+        return srcTubeIdx;
+    }
+
+    public int getDstTubeIdx() {
+        return dstTubeIdx;
+    }
+
     /**
      * @return {@code true} if this move can be applied to the given puzzle
      */
