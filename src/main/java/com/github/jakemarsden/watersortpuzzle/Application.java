@@ -121,17 +121,18 @@ public class Application {
             Puzzle puzzle, int srcTubeIdx, int dstTubeIdx, Consumer<String> out) {
 
         for (int tubeIdx = 0; tubeIdx < puzzle.getTubeCount(); tubeIdx++) {
-            out.accept("   ");
             if (tubeIdx == srcTubeIdx) {
+                out.accept(dstTubeIdx < tubeIdx ? " « " : "   ");
                 out.accept(" ⇑ ");
             } else if (tubeIdx == dstTubeIdx) {
+                out.accept(srcTubeIdx < tubeIdx ? " » " : "   ");
                 out.accept(" ⇓ ");
             } else if (tubeIdx > srcTubeIdx && tubeIdx < dstTubeIdx) {
-                out.accept(" » ");
+                out.accept(" »  » ");
             } else if (tubeIdx > dstTubeIdx && tubeIdx < srcTubeIdx) {
-                out.accept(" « ");
+                out.accept(" «  « ");
             } else {
-                out.accept("   ");
+                out.accept("      ");
             }
         }
         out.accept(System.lineSeparator());
