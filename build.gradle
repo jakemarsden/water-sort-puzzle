@@ -1,10 +1,15 @@
 plugins {
     id 'application'
     id 'java'
+    id 'maven-publish'
 }
 
 group = 'com.github.jakemarsden'
 version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
 
 application {
     mainClassName = "${group}.${name.replace('-', '')}.Application"
@@ -14,4 +19,20 @@ java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
     withSourcesJar()
+}
+
+test {
+    useJUnitPlatform()
+    reports {
+        html.enabled = true
+        junitXml.enabled = true
+    }
+}
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            from components.java
+        }
+    }
 }
